@@ -2,19 +2,19 @@ package com.example.glovodz.controller;
 
 import com.example.glovodz.dto.OrderDTO;
 import com.example.glovodz.service.OrderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/orders")
 public class OrderController {
 
     private final OrderService orderService;
-
-    public OrderController(OrderService orderService) {
-        this.orderService = orderService;
-    }
 
     @GetMapping("/{id}")
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable int id) {
@@ -25,6 +25,12 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
+    @GetMapping
+    public ResponseEntity<List<OrderDTO>> getAllOrders() {
+        List<OrderDTO> allOrders = orderService.getAllOrders();
+        return ResponseEntity.ok(allOrders);
+    }
+
 
     @PostMapping
     public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
