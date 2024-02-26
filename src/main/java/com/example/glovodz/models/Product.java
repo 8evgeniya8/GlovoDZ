@@ -1,20 +1,16 @@
-package com.example.glovodz.dto.models;
+package com.example.glovodz.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Order {
+public class Product {
     private int id;
-    private Date date;
+    private String name;
     private double cost;
-    private List<Product> products;
 }

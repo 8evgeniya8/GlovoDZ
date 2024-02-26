@@ -1,9 +1,9 @@
 package com.example.glovodz.service;
 
 import com.example.glovodz.dto.OrderDTO;
-import com.example.glovodz.dto.models.Order;
 import com.example.glovodz.mapper.OrderMapper;
-import com.example.glovodz.repository.jdbc.OrderJDBCRepository;
+import com.example.glovodz.models.Order;
+import com.example.glovodz.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -12,45 +12,50 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-
 public class OrderServiceImpl implements OrderService {
 
-    private final OrderJDBCRepository orderRepository;
+    private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
+
     @Override
     public OrderDTO getOrderById(int id) {
-        var order = orderRepository.getOrderById(id);
-        return orderMapper.orderToOrderDTO(order);
+        return orderRepository.findById(id)
+                .map(orderMapper::orderToOrderDTO)
+                .orElse(null);
     }
+
     @Override
     public List<OrderDTO> getAllOrders() {
-        var orders = orderRepository.getAllOrders();
-        return orders.stream()
+        return ((List<Order>) orderRepository.findAll())
+                .stream()
                 .map(orderMapper::orderToOrderDTO)
                 .collect(Collectors.toList());
     }
+
     @Override
     public OrderDTO addOrder(OrderDTO orderDTO) {
         Order order = orderMapper.orderDTOToOrder(orderDTO);
-        order = orderRepository.addOrder(order);
+        order = orderRepository.save(order);
         return orderMapper.orderToOrderDTO(order);
     }
 
     @Override
     public OrderDTO updateOrder(int id, OrderDTO orderDTO) {
-        Order order = orderMapper.orderDTOToOrder(orderDTO);
-        order.setId(id);
-        orderRepository.updateOrder(order);
-        return orderDTO;
+        if (orderRepository.existsById(id)) {
+            Order order = orderMapper.orderDTOToOrder(orderDTO);
+            order.setId(id);
+            order = orderRepository.save(order);
+            return orderMapper.orderToOrderDTO(order);
+        }
+        return null;
     }
+
     @Override
     public boolean delete(Integer id) {
-        boolean exists = orderRepository.existsById(id);
-        if (exists) {
+        if (orderRepository.existsById(id)) {
             orderRepository.deleteById(id);
             return true;
-        } else {
-            return false;
         }
+        return false;
     }
 }

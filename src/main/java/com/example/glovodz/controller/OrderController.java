@@ -52,9 +52,9 @@ public class OrderController {
         }
     }
 
-    @DeleteMapping("/{orderId}")
-    public ResponseEntity<Void> deleteOrderById(@PathVariable("orderId") Integer orderId) {
-        boolean deleted = orderService.delete(orderId);
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteOrderById(@PathVariable("id") Integer id) {
+        boolean deleted = orderService.delete(id);
         if (deleted) {
             return ResponseEntity.noContent().build();
         } else {
