@@ -9,8 +9,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+
 @RequiredArgsConstructor
+@RestController
 @RequestMapping("/orders")
 public class OrderController {
 
@@ -25,13 +26,14 @@ public class OrderController {
             return ResponseEntity.notFound().build();
         }
     }
+    @CrossOrigin("*")
     @GetMapping
     public ResponseEntity<List<OrderDTO>> getAllOrders() {
         List<OrderDTO> allOrders = orderService.getAllOrders();
         return ResponseEntity.ok(allOrders);
     }
 
-
+    @CrossOrigin("*")
     @PostMapping
     public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
         OrderDTO createdOrderDTO = orderService.addOrder(orderDTO);
